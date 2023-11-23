@@ -13,7 +13,7 @@
     border-radius: 8px;
     margin-bottom: 20px;
   
-    min-width: 300px;
+    max-width: 500px;
     width: 100%;
   }
   
@@ -76,3 +76,47 @@
     font-size: 16px;
     font-weight: bold;
   }
+
+  .number {
+    width: 100px;
+  }
+
+  .end-btn {
+    margin-top: 15px;
+  }
+
+  .current-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .current-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .current-wrapper .name {
+    flex: 1 1 30%;
+    max-width: 30%;
+
+    text-align: start;
+  }
+
+  .current-wrapper input {
+    max-width: 120px;
+  }
+
+  .current-wrapper .totals {
+    flex: 1 1 30%;
+    max-width: 30%;
+
+  }
+
+  .start-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+ 

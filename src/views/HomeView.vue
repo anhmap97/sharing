@@ -8,7 +8,7 @@
       <p class="question-text">{{ question }}</p>
       <div class="wrapper">
         <label for="playerCount" class="label-text">Number of players</label>
-        <input type="number" id="playerCount" v-model="playerCount" class="input-field" />
+        <input type="number" id="playerCount" v-model="playerCount" class="input-field number" />
         <button :disabled="!playerCount" @click="submitPlayerCount" class="submit-button">
           Submit
         </button>
@@ -22,13 +22,26 @@
           Add Player
         </button>
       </div>
-      <button v-else @click="playGame" class="submit-button">Start game</button>
+      <div v-else class="start-wrapper">
+        Winning points
+        <input type="number" id="winScore" v-model="winScore" class="input-field" />
+        <button @click="playGame" class="submit-button">Start game</button>
+      </div>
       <div v-if="players.length" class="name-wrap">
         <p class="player-list-title">Player List:</p>
         <ul>
-          <li v-for="(player, index) in players" :key="index">{{ player }}</li>
+          <li v-for="(player, index) in players" :key="index">{{ player.name }}</li>
         </ul>
       </div>
+    </div>
+    <div v-if="running" class="game-container current-form">
+      <div class="win-score">Winning points: {{ winScoreStore }}</div>
+      <div v-for="(player, index) in players" :key="index" class="current-wrapper">
+        <div class="name">{{ player.name }}</div>
+        <input v-model="player.currentScore" type="number" id="score" class="input-field" />
+        <div class="totals">{{ player.totals }}</div>
+      </div>
+      <button @click="endRound" class="submit-button end-btn">End Round</button>
     </div>
   </div>
 </template>
@@ -42,12 +55,15 @@ const store = useStore()
 const showGreeting = ref(true)
 const showGame = ref(false)
 const addName = ref(false)
+const running = ref(false)
 const greeting = ref('Welcome to the number counting app!')
 const question = ref('How many players do you have?')
 const playerCount = ref(0)
+const winScore = ref(0)
 const newPlayer = ref('')
-const players = computed(() => store.players)
-const playersCount = computed(() => store.playerCount)
+const players = computed(() => store.getPlayers)
+const playersCount = computed(() => store.getPlayerCount)
+const winScoreStore = computed(() => store.getWinScore)
 
 const startGame = () => {
   showGreeting.value = false
@@ -62,12 +78,29 @@ const submitPlayerCount = () => {
 }
 
 const addNewPlayer = () => {
-  store.addPlayer(newPlayer.value)
+  store.addPlayer({ name: newPlayer.value, currentScore: 0, totals: 0 })
   newPlayer.value = ''
 }
 
 const playGame = () => {
+  store.setWinScore(winScore.value)
+
   addName.value = false
+  running.value = true
+  winScore.value = 0
+}
+
+const endRound = () => {
+  players.value.forEach((player) => {
+    console.log(player.currentScore)
+    player.totals = (player.totals ?? 0) + (player.currentScore ?? 0)
+
+    if (player.totals >= winScoreStore.value) {
+      alert('The winner is' + player.name)
+    }
+
+    player.currentScore = 0
+  })
 }
 </script>
 

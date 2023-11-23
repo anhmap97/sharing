@@ -2,7 +2,12 @@ import { defineStore } from 'pinia'
 
 interface Store {
   playerCount: number
-  players: string[]
+  players: {
+    name?: string
+    totals?: number
+    currentScore?: number
+  }[]
+  winScore: number
 }
 
 export const useStore = defineStore({
@@ -10,7 +15,8 @@ export const useStore = defineStore({
   state: (): Store => {
     return {
       playerCount: 0,
-      players: []
+      players: [],
+      winScore: 0
     }
   },
   getters: {
@@ -19,13 +25,19 @@ export const useStore = defineStore({
     },
     getPlayers(state: Store) {
       return state.players
+    },
+    getWinScore(state: Store) {
+      return state.winScore
     }
   },
   actions: {
     setPlayerCount(count: number) {
       this.playerCount = count
     },
-    addPlayer(player: string) {
+    setWinScore(count: number) {
+      this.winScore = count
+    },
+    addPlayer(player: { name: string; currentScore: number; totals: number }) {
       this.players.push(player)
     }
   }
